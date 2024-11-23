@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciamento de Sessões</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <h1>Olá, {{username}}</h1>
+    <form action="/salvauser" method="POST">
+        <input type="text" name="username" placeholder="Digite seu nome" required>
+        <button type="submit">Salvar Nome</button>
+    </form>
+    <h2>Minhas Tarefas</h2>
+    <ul>
+        {{#tasks}}
+        <li>{{.}}</li>
+        {{/tasks}}
+    </ul>
+    <form action="/addtask" method="POST">
+        <input type="text" name="task" placeholder="Nova tarefa" required>
+        <button type="submit">Adicionar Tarefa</button>
+    </form>
+    <br>
+    <a href="/random">Gerar Número Aleatório</a>
+    <br>
+    <a href="/contador">Ver Contadores de Acesso</a>
+</body>
+</html>
