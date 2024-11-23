@@ -1,26 +1,52 @@
 const express = require('express');
 const router = express.Router();
 
+const USER_GROUPS = {
+    admin: 'Administração',
+    editor: 'Edição',
+    guest: 'Visitantes',
+};
+
 router.get('/', (req, res) => {
     const username = req.session.username || 'Convidado';
-    const tasks = req.session.tasks || [];
-    res.render('index', { username, tasks });
+    const userType = req.session.userType || 'guest';
+    const groupName = USER_GROUPS[userType];
+    const tasks = req.session.tasks || {};
+
+    res.render('index', {
+        username,
+        groupName,
+        tasks: tasks[groupName] || [],
+    });
 });
 
 router.post('/salvauser', (req, res) => {
-    const { username } = req.body;
+    const { username, userType } = req.body;
+
     req.session.username = username;
+    req.session.userType = userType || 'guest';
+
     res.redirect('/');
 });
 
 router.post('/addtask', (req, res) => {
-    const { task } = req.body;
-    if (!req.session.username) {
-        return res.status(401).send('Você precisa estar logado para adicionar tarefas.');
-    }
-    req.session.tasks = req.session.tasks || [];
-    req.session.tasks.push(task);
-    res.redirect('/');
+  if (!req.session.username) {
+      return res.status(401).send('Você precisa estar logado para adicionar tarefas.');
+  }
+
+  const { task } = req.body;
+  const userType = req.session.userType;
+  const groupName = USER_GROUPS[userType];
+
+  if (!groupName) {
+      return res.status(403).send('Você não pertence a um grupo autorizado.');
+  }
+
+  req.session.tasks = req.session.tasks || {};
+  req.session.tasks[groupName] = req.session.tasks[groupName] || [];
+  req.session.tasks[groupName].push(task);
+
+  res.redirect('/');
 });
 
 router.get('/random', (req, res) => {

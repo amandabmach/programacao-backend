@@ -1,29 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Gerenciamento de Sessões</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tarefas</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-    <h1>Olá, {{username}}</h1>
-    <form action="/salvauser" method="POST">
-        <input type="text" name="username" placeholder="Digite seu nome" required>
-        <button type="submit">Salvar Nome</button>
-    </form>
-    <h2>Minhas Tarefas</h2>
-    <ul>
-        {{#tasks}}
-        <li>{{.}}</li>
-        {{/tasks}}
-    </ul>
-    <form action="/addtask" method="POST">
-        <input type="text" name="task" placeholder="Nova tarefa" required>
-        <button type="submit">Adicionar Tarefa</button>
-    </form>
-    <br>
-    <a href="/random">Gerar Número Aleatório</a>
-    <br>
-    <a href="/contador">Ver Contadores de Acesso</a>
+    <div class="container">
+        <header>
+            <h1>Bem-vindo, {{username}}!</h1>
+            <p>Seu grupo: {{groupName}}</p>
+        </header>
+
+        <section class="form-section">
+            <h2>Configurações de Usuário</h2>
+            <form action="/salvauser" method="POST">
+                <label for="username">Nome:</label>
+                <input type="text" id="username" name="username" required placeholder="Digite seu nome">
+                
+                <label for="userType">Tipo de usuário:</label>
+                <select id="userType" name="userType">
+                    <option value="admin">Admin</option>
+                    <option value="editor">Editor</option>
+                    <option value="guest">Visitante</option>
+                </select>
+
+                <button type="submit">Salvar</button>
+            </form>
+        </section>
+
+        <section class="form-section">
+            <h2>Adicionar Nova Tarefa</h2>
+            <form action="/addtask" method="POST">
+                <label for="task">Nova Tarefa:</label>
+                <input type="text" id="task" name="task" required placeholder="Digite uma nova tarefa">
+                <button type="submit">Adicionar Tarefa</button>
+            </form>
+        </section>
+
+        <section class="task-list">
+            <h2>Tarefas do grupo: {{groupName}}</h2>
+            <ul>
+                {{#tasks}}
+                    <li>{{.}}</li>
+                {{/tasks}}
+                {{^tasks}}
+                    <li>Sem tarefas para mostrar.</li>
+                {{/tasks}}
+            </ul>
+        </section>
+
+        <footer>
+            <p><a href="/random">Gerar Número Aleatório</a></p>
+            <p><a href="/contador">Ver Contadores de Acesso</a></p>
+            <p><a href="/logout">Sair</a></p>
+        </footer>
+    </div>
 </body>
 </html>
