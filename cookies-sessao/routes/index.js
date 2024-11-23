@@ -1,21 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-// Página inicial
 router.get('/', (req, res) => {
     const username = req.session.username || 'Convidado';
     const tasks = req.session.tasks || [];
     res.render('index', { username, tasks });
 });
 
-// Salvar usuário na sessão
 router.post('/salvauser', (req, res) => {
     const { username } = req.body;
     req.session.username = username;
     res.redirect('/');
 });
 
-// Adicionar tarefa
 router.post('/addtask', (req, res) => {
     const { task } = req.body;
     if (!req.session.username) {
@@ -26,7 +23,6 @@ router.post('/addtask', (req, res) => {
     res.redirect('/');
 });
 
-// Gerar número aleatório em um cookie
 router.get('/random', (req, res) => {
     let randomNumber = req.cookies.randomNumber;
     if (!randomNumber) {
@@ -36,7 +32,6 @@ router.get('/random', (req, res) => {
     res.send(`Número gerado: ${randomNumber}`);
 });
 
-// Contador de acessos
 let totalAccess = 0;
 router.get('/contador', (req, res) => {
     totalAccess++;
@@ -44,7 +39,6 @@ router.get('/contador', (req, res) => {
     res.send(`Total de acessos: ${totalAccess}, Seus acessos: ${req.session.userAccess}`);
 });
 
-// Logout
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
